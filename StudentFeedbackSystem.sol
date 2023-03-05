@@ -5,7 +5,7 @@ contract FeedbackSystem {
   mapping(address => Faculty[]) faculties; 
   mapping(address => TakenCourse[]) takenCourses;
   mapping(address => StudentsFeedback[]) studentsFeedbacks;
-  mapping(address => FacultyCourses[]) facultyCourses;
+  mapping(address => Courses[]) facultyCourses;
   
   address owner;
 
@@ -15,11 +15,6 @@ contract FeedbackSystem {
   struct Faculty {
       string rating;
       string comment;
-  }
-
-  struct FacultyCourses{
-      string courseCode;
-      string courseTitle;
   }
 
   struct Feedback {
@@ -81,7 +76,7 @@ contract FeedbackSystem {
           Courses(_facultyAddress, _courseCode, _courseTitle, _faculty)
       );
       facultyCourses[_facultyAddress].push(
-          FacultyCourses(_courseCode, _courseTitle)
+          Courses(_facultyAddress, _courseCode, _courseTitle, _faculty)
       );
   }
 
@@ -97,7 +92,7 @@ contract FeedbackSystem {
       return takenCourses[msg.sender];
   }
 
-  function getFacultyCourses() public view returns(FacultyCourses[] memory){
+  function getFacultyCourses() public view returns(Courses[] memory){
       return facultyCourses[msg.sender];
   }
 }
