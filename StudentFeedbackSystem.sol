@@ -4,14 +4,16 @@ pragma solidity 0.8.17;
 contract FeedbackSystem {
   mapping(address => Faculty[]) faculties; 
   mapping(address => TakenCourse[]) takenCourses;
-  mapping(address => StudentsFeedback[]) studentsFeedbacks;
   mapping(address => Courses[]) facultyCourses;
-  
+  mapping(address => UserAccount[]) userAccount;
   address owner;
-
-  struct StudentsFeedback {
-      address to;
+  
+  struct UserAccount {
+      address userAddress;
+      string password;
+      string role;
   }
+
   struct Faculty {
       string rating;
       string comment;
@@ -21,7 +23,6 @@ contract FeedbackSystem {
       address to;
       string rating;
       string comment;
-    //   bool count;
   }
 
   struct Courses {
@@ -37,7 +38,6 @@ contract FeedbackSystem {
       string faculty;
   }
   Courses[] private courses;
-//   FacultyCourses[] private faculty
 
   constructor() {
       owner = msg.sender;
@@ -51,7 +51,6 @@ contract FeedbackSystem {
   Feedback[] private feedbacks;
 
   function submitFeedback(address _to, string memory _rating, string memory _comment) public {
-    //   require(feedback.count==false, "Not done.");
       faculties[_to].push(Faculty({
           rating: _rating,
           comment: _comment
@@ -82,6 +81,16 @@ contract FeedbackSystem {
 
   function getAllCourses() public view returns(Courses[] memory){
       return courses;
+  }
+
+  function createUserAccount(address _userAddress, string memory _password, string memory _role) public onlyOwner {
+      userAccount[_userAddress].push(
+          UserAccount(_userAddress, _password, _role)
+      );
+  }
+
+  function getUserAccount() public view returns(UserAccount[] memory) {
+      return userAccount[msg.sender];
   }
 
   function getAssignToCourse(string memory _courseCode, string memory _courseTitle, string memory _faculty) public {
